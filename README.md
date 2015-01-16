@@ -1,6 +1,6 @@
 djvm
 ====
-Copyright 2015 James Mahler, Richard Cattermole
+Copyright 2015 James Mahler  
 Licensed under the terms of the MIT license - See [LICENSE](LICENSE)
 
 Allows for access to Java JVM from D.  Provide D'esk interfaces as the C interaction into JNI is messy to say the least.  This is a slow work in progress.
@@ -25,7 +25,10 @@ Example
 -------
 Here is an example usage of the D api:
 ```d
-DJvm djvm = DJvm.getInstance;
+DJvm djvm = new DJvm("");
+scope(exit) {
+	djvm.destroyJvm();
+}
 
 JClass systemCls = djvm.findClass("java/lang/System");
 JClass printCls = djvm.findClass("java/io/PrintStream");
