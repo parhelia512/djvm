@@ -12,17 +12,10 @@ private string getJtype(string type) {
 	return "j" ~ toLower(type);
 }
 
-private string generateFieldGets(string[] types, string extra) {
+private string generateFieldMethods(string[] types, string extra) {
 	string rtn = "";
 	foreach (ref string type; types) {
 		rtn ~= getJtype(type) ~ " get" ~ type ~ "() { return (*env).Get" ~ extra ~ type ~ "Field(env, cls, fieldId); }\n";
-	}
-	return rtn;
-}
-
-private string generateFieldSets(string[] types, string extra) {
-	string rtn = "";
-	foreach (ref string type; types) {
 		rtn ~= "void set" ~ type ~ "(" ~ getJtype(type) ~ " value) { return (*env).Set" ~ extra ~ type ~ "Field(env, cls, fieldId, value); }\n";
 	}
 	return rtn;
@@ -92,8 +85,7 @@ class JField {
 		this.fieldId = fieldId;
 	}
 
-	mixin(generateFieldGets(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], ""));
-	mixin(generateFieldSets(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], ""));
+	mixin(generateFieldMethods(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], ""));
 }
 
 class JStaticField {
@@ -109,8 +101,7 @@ class JStaticField {
 		this.fieldId = fieldId;
 	}
 
-	mixin(generateFieldGets(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "Static"));
-	mixin(generateFieldSets(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "Static"));
+	mixin(generateFieldMethods(["Object", "Boolean", "Byte", "Char", "Short", "Int", "Long", "Float", "Double"], "Static"));
 }
 
 class JClass {
