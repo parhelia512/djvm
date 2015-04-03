@@ -167,19 +167,35 @@ class JClass {
 	}
 
 	JField getField(string name, string signature) {
-		return new JField(jvm, env, cls, (*env).GetFieldID(env, cls, toStringz(name), toStringz(signature)));
+		jfieldID fid = (*env).GetFieldID(env, cls, toStringz(name), toStringz(signature));
+		if (fid is null) {
+			return null;
+		}
+		return new JField(jvm, env, cls, fid);
 	}
 
 	JStaticField getStaticField(string name, string signature) {
-		return new JStaticField(jvm, env, cls, (*env).GetStaticFieldID(env, cls, toStringz(name), toStringz(signature)));
+		jfieldID fid = (*env).GetStaticFieldID(env, cls, toStringz(name), toStringz(signature));
+		if (fid is null) {
+			return null;
+		}
+		return new JStaticField(jvm, env, cls, fid);
 	}
 
 	JMethod getMethod(string name, string signature) {
-		return new JMethod(jvm, env, cls, (*env).GetMethodID(env, cls, toStringz(name), toStringz(signature)));
+		jmethodID mid = (*env).GetMethodID(env, cls, toStringz(name), toStringz(signature));
+		if (mid is null) {
+			return null;
+		}
+		return new JMethod(jvm, env, cls, mid);
 	}
 	
 	JStaticMethod getStaticMethod(string name, string signature) {
-		return new JStaticMethod(jvm, env, cls, (*env).GetStaticMethodID(env, cls, toStringz(name), toStringz(signature)));
+		jmethodID mid = (*env).GetStaticMethodID(env, cls, toStringz(name), toStringz(signature));
+		if (mid is null) {
+			return null;
+		}
+		return new JStaticMethod(jvm, env, cls, mid);
 	}
 }
 
@@ -201,7 +217,11 @@ class DJvm {
 	}
 
 	JClass findClass(string name) {
-		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name.replace(".", "/"))));
+		jclass cls = (*env).FindClass(env, toStringz(name.replace(".", "/")));
+		if (cls is null) {
+			return null;
+		}
+		return new JClass(jvm, env, cls);
 	}
 
 	void destroyJvm() {

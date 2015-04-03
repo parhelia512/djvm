@@ -50,6 +50,7 @@ Work
 - [x] Unit tests using ByteBuffer to check bi-directional
 - [ ] Clean up dub to work on other boxes to run tests (this should be dmd sc.ini not in dub to do link flags)
 - [x] Make pretty wrapper
-- [ ] Tons of error handling (aka nulls on unsuccessful finds instead of segfaults on usage)
+- [x] Tons of error handling (aka nulls on unsuccessful finds instead of segfaults on usage)
+- [ ] Add conv support so you can do to!string passing in jobject
 - [ ] Make pretty JDBC wrapper
 
