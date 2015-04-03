@@ -17,12 +17,10 @@ Getting Started
 Requirements:
 * Java VM (if using package manager, make sure to install -dev packages)
 * dmd
+* LD_LIBRARY_PATH pointing to jvm install (/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server for example)
 
 Compiling (For now I just do this in the source/djvm directory):
-* dmd -L/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server/libjvm.so djvm.d
-
-Running:
-* LD_LIBRARY_PATH=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server ./djvm
+* dub
 
 Example
 -------
@@ -33,13 +31,13 @@ scope(exit) {
 	djvm.destroyJvm();
 }
 
-JClass systemCls = djvm.findClass("java/lang/System");
-JClass printCls = djvm.findClass("java/io/PrintStream");
+JClass systemCls = djvm.findClass("java.lang.System");
+JClass printCls = djvm.findClass("java.io.PrintStream");
 
-JStaticField field = systemCls.getStaticField("out", "Ljava/io/PrintStream;");
+JStaticField field = systemCls.getStaticField("out", JniType!("java.io.PrintStream"));
 jobject obj = field.getObject();
 
-JMethod method = printCls.getMethod("println", "(I)V");
+JMethod method = printCls.getMethod("println", JniSig!(["int"], "void"));
 method.callVoid(obj, 100);
 ```
 
@@ -50,7 +48,7 @@ Work
 - [x] Fix seg faults
 - [x] Use dub
 - [x] Unit tests using ByteBuffer to check bi-directional
-- [ ] Clean up dub to work on other boxes (this should be dmd sc.ini not in dub to do link flags)
+- [ ] Clean up dub to work on other boxes to run tests (this should be dmd sc.ini not in dub to do link flags)
 - [x] Make pretty wrapper
 - [ ] Tons of error handling (aka nulls on unsuccessful finds instead of segfaults on usage)
 - [ ] Make pretty JDBC wrapper

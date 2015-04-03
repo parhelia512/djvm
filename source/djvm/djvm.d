@@ -1,4 +1,5 @@
 import std.string;
+import std.array;
 import core.stdc.stdarg;
 
 import jni;
@@ -35,6 +36,56 @@ private string generateMethodCalls(string[] types, string extra, string extraMet
 		rtn ~= "}\n";
 	}
 	return rtn;
+}
+
+string typeToJniType(string type) {
+	string rtn = "";
+	if (type[$-1] == ']' && type[$-2] == '[') {
+		rtn ~= "[";
+		type = type[0 .. $-2];
+	}
+
+	switch (type) {
+		case "boolean":
+			return rtn ~ "Z";
+		case "byte":
+			return rtn ~ "B";
+		case "char":
+			return rtn ~ "C";
+		case "short":
+			return rtn ~ "S";
+		case "int":
+			return rtn ~ "I";
+		case "long":
+			return rtn ~ "J";
+		case "float":
+			return rtn ~ "F";
+		case "double":
+			return rtn ~ "D";
+		case "void":
+			return "V";
+		default:
+			return rtn ~ "L" ~ type.replace(".", "/") ~ ";";
+	}
+}
+
+template JniType(string type) {
+	const JniType = typeToJniType(type);
+}
+
+template JniSig(string[] args, string returnType) {
+	string toJni() {
+		string rtn = "(";
+
+		foreach (ref string arg; args) {
+			rtn ~= typeToJniType(arg);
+		}
+		rtn ~= ")" ~ typeToJniType(returnType);
+
+		return rtn;
+	}
+
+	const JniSig = toJni();
 }
 
 // Wrapped types
@@ -150,10 +201,11 @@ class DJvm {
 	}
 
 	JClass findClass(string name) {
-		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name)));
+		return new JClass(jvm, env, (*env).FindClass(env, toStringz(name.replace(".", "/"))));
 	}
 
 	void destroyJvm() {
+		(*jvm).DetachCurrentThread(jvm);
 		(*jvm).DestroyJavaVM(jvm);
 	}
 }

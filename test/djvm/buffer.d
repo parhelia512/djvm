@@ -4,11 +4,7 @@ import jni;
 version(unittest) {
 
 	unittest {
-
 		DJvm djvm = new DJvm("");
-		scope(exit) {
-				  djvm.destroyJvm();
-		}
 
 		JClass bbCls = djvm.findClass("java/nio/ByteBuffer");
 
