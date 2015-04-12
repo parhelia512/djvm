@@ -43,14 +43,5 @@ method.callVoid(obj, 100);
 
 Work
 ----
-- [x] Port JNI example from C to D
-- [x] Get a jni.d that compiles
-- [x] Fix seg faults
-- [x] Use dub
-- [x] Unit tests using ByteBuffer to check bi-directional
-- [ ] Clean up dub to work on other boxes to run tests (this should be dmd sc.ini not in dub to do link flags)
-- [x] Make pretty wrapper
-- [x] Tons of error handling (aka nulls on unsuccessful finds instead of segfaults on usage)
-- [ ] Add conv support so you can do to!string passing in jobject
-- [ ] Make pretty JDBC wrapper
+Work is now being tracked through issues.
 
